@@ -1,3 +1,4 @@
+# Esto es pura IA
 # FASE 1 – Validación
 
 ## Resumen de lo construido

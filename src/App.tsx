@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import Convocatorias from "./pages/Convocatorias";
+import NuevaConvocatoria from "./pages/NuevaConvocatoria";
 import Documentos from "./pages/Documentos";
 import Expedientes from "./pages/Expedientes";
 import Usuarios from "./pages/Usuarios";
@@ -23,6 +24,7 @@ const App = () => (
           <Route element={<AppLayout />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/convocatorias" element={<Convocatorias />} />
+            <Route path="/convocatorias/nueva" element={<NuevaConvocatoria />} />
             <Route path="/documentos" element={<Documentos />} />
             <Route path="/expedientes" element={<Expedientes />} />
             <Route path="/usuarios" element={<Usuarios />} />

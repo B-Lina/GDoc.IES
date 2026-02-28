@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { PostulanteLayout } from "@/components/layout/PostulanteLayout";
 import Dashboard from "./pages/Dashboard";
 import Convocatorias from "./pages/Convocatorias";
 import NuevaConvocatoria from "./pages/NuevaConvocatoria";
@@ -29,6 +30,8 @@ const App = () => (
             <Route path="/documentos" element={<Documentos />} />
             <Route path="/expedientes" element={<Expedientes />} />
             <Route path="/usuarios" element={<Usuarios />} />
+          </Route>
+          <Route element={<PostulanteLayout />}>
             <Route path="/portal-postulante" element={<PortalPostulante />} />
           </Route>
           <Route path="*" element={<NotFound />} />

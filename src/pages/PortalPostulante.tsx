@@ -5,8 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast";
-import { Upload, CheckCircle2, AlertTriangle, Clock, FileText, ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Upload, CheckCircle2, AlertTriangle, Clock, FileText, User, Briefcase } from "lucide-react";
 
 // ── Mock Django REST Framework Response ──
 
@@ -105,19 +104,17 @@ const estadoConfig: Record<EstadoDocumento, { label: string; variant: "default" 
 // ── Component ──
 
 export default function PortalPostulante() {
-  const navigate = useNavigate();
   const [documentos, setDocumentos] = useState<DocumentoRequisito[]>(documentosIniciales);
 
   const aprobados = documentos.filter((d) => d.estado_actual === "APROBADO").length;
   const total = documentos.length;
   const progreso = total > 0 ? Math.round((aprobados / total) * 100) : 0;
 
-  const handleUpload = (docId: number) => {
-    // Simulate creating FormData and POSTing to Django
-    // const formData = new FormData();
-    // formData.append("archivo", file);
-    // await fetch(`/api/documentos/${docId}/upload/`, { method: "POST", body: formData });
+  const pendientes = documentos.filter((d) => d.estado_actual === "PENDIENTE").length;
+  const enRevision = documentos.filter((d) => d.estado_actual === "CARGADO").length;
+  const rechazados = documentos.filter((d) => d.estado_actual === "RECHAZADO").length;
 
+  const handleUpload = (docId: number) => {
     setDocumentos((prev) =>
       prev.map((d) =>
         d.id === docId
@@ -133,31 +130,67 @@ export default function PortalPostulante() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate("/convocatorias")}>
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Portal del Postulante</h1>
-          <p className="text-muted-foreground">{convocatoriaDetalles.titulo} — {convocatoriaDetalles.cargo}</p>
-        </div>
+    <div className="space-y-8">
+      {/* Welcome Header */}
+      <div className="space-y-1">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
+          Bienvenido, Postulante
+        </h1>
+        <p className="text-muted-foreground">
+          Complete la documentación requerida para su postulación.
+        </p>
       </div>
 
-      {/* Progress */}
+      {/* Convocatoria Info */}
+      <Card className="border-primary/20 bg-primary/5">
+        <CardContent className="flex items-start gap-4 p-5">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+            <Briefcase className="h-5 w-5 text-primary" />
+          </div>
+          <div className="space-y-0.5">
+            <p className="font-semibold text-foreground">{convocatoriaDetalles.titulo}</p>
+            <p className="text-sm text-muted-foreground">{convocatoriaDetalles.cargo}</p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Progress Section */}
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Progreso de Documentación</CardTitle>
           <CardDescription>{aprobados} de {total} documentos aprobados</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <Progress value={progreso} className="h-3" />
-          <p className="mt-2 text-sm text-muted-foreground text-right">{progreso}%</p>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="rounded-lg border border-border bg-muted/50 p-3 text-center">
+              <p className="text-2xl font-bold text-foreground">{pendientes}</p>
+              <p className="text-xs text-muted-foreground">Pendientes</p>
+            </div>
+            <div className="rounded-lg border border-border bg-muted/50 p-3 text-center">
+              <p className="text-2xl font-bold text-foreground">{enRevision}</p>
+              <p className="text-xs text-muted-foreground">En Revisión</p>
+            </div>
+            <div className="rounded-lg border border-border bg-muted/50 p-3 text-center">
+              <p className="text-2xl font-bold text-primary">{aprobados}</p>
+              <p className="text-xs text-muted-foreground">Aprobados</p>
+            </div>
+            <div className="rounded-lg border border-border bg-muted/50 p-3 text-center">
+              <p className="text-2xl font-bold text-destructive">{rechazados}</p>
+              <p className="text-xs text-muted-foreground">Rechazados</p>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
       {/* Document Checklist */}
+      <div className="space-y-2">
+        <h2 className="text-lg font-semibold text-foreground">Documentos Requeridos</h2>
+        <p className="text-sm text-muted-foreground">
+          Suba cada documento en formato PDF o JPG. Los documentos serán revisados por el equipo evaluador.
+        </p>
+      </div>
+
       <div className="space-y-4">
         {documentos.map((doc) => {
           const cfg = estadoConfig[doc.estado_actual];

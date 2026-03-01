@@ -39,16 +39,7 @@ const PREDEFINED_REVIEW_POINTS: ReviewPoint[] = [
 
 export default function NuevaConvocatoria() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("personal");
-
-  // Datos personales
-  const [nombres, setNombres] = useState("");
-  const [apellidos, setApellidos] = useState("");
-  const [tipoDocumento, setTipoDocumento] = useState("");
-  const [numeroDocumento, setNumeroDocumento] = useState("");
-  const [email, setEmail] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [direccion, setDireccion] = useState("");
+  const [activeTab, setActiveTab] = useState("detalles");
 
   // Datos de contratación
   const [cargo, setCargo] = useState("");
@@ -138,60 +129,10 @@ export default function NuevaConvocatoria() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="personal">Datos Personales</TabsTrigger>
-          <TabsTrigger value="contratacion">Datos de Contratación</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="detalles">Detalles de la Convocatoria</TabsTrigger>
           <TabsTrigger value="documentacion">Documentación</TabsTrigger>
         </TabsList>
-
-        {/* === DATOS PERSONALES === */}
-        <TabsContent value="personal">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Información Personal</CardTitle>
-              <CardDescription>Datos básicos del postulante</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label>Nombres</Label>
-                  <Input placeholder="Ej: María Alejandra" value={nombres} onChange={(e) => setNombres(e.target.value)} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Apellidos</Label>
-                  <Input placeholder="Ej: García López" value={apellidos} onChange={(e) => setApellidos(e.target.value)} />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label>Tipo de Documento</Label>
-                  <Input placeholder="Ej: Cédula de Ciudadanía" value={tipoDocumento} onChange={(e) => setTipoDocumento(e.target.value)} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Número de Documento</Label>
-                  <Input placeholder="Ej: 1234567890" value={numeroDocumento} onChange={(e) => setNumeroDocumento(e.target.value)} />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label>Correo Electrónico</Label>
-                  <Input type="email" placeholder="correo@ejemplo.com" value={email} onChange={(e) => setEmail(e.target.value)} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Teléfono</Label>
-                  <Input placeholder="Ej: 310 555 1234" value={telefono} onChange={(e) => setTelefono(e.target.value)} />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label>Dirección</Label>
-                <Input placeholder="Dirección de residencia" value={direccion} onChange={(e) => setDireccion(e.target.value)} />
-              </div>
-              <div className="flex justify-end pt-4">
-                <Button onClick={() => setActiveTab("contratacion")}>Siguiente →</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
 
         {/* === DATOS DE CONTRATACIÓN === */}
         <TabsContent value="contratacion">

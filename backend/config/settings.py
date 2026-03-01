@@ -132,3 +132,6 @@ if DEBUG and os.environ.get('CORS_ALLOW_ALL', 'true').lower() in ('true', '1'):
 # OCR (Fase 3): ruta a Tesseract. En Windows suele ser necesario.
 # Ejemplo: TESSERACT_CMD=C:\Program Files\Tesseract-OCR\tesseract.exe
 TESSERACT_CMD = os.environ.get('TESSERACT_CMD', '')
+
+
+AUTH_USER_MODEL = 'documental.Usuario'

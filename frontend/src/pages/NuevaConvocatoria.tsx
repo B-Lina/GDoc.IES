@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
-import { convocatorias } from "@/lib/mock-data";
+import { useCrearConvocatoria } from "@/hooks/useConvocatorias";
 
 interface ReviewPoint {
   id: string;
@@ -39,7 +39,8 @@ const PREDEFINED_REVIEW_POINTS: ReviewPoint[] = [
 
 export default function NuevaConvocatoria() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("detalles"); //antes era "personal pero cambio a detalles"
+  const crearConvocatoria = useCrearConvocatoria();
+  const [activeTab, setActiveTab] = useState("detalles");
 
   // Datos de convocatoria
   const [titulo, setTitulo] = useState("");
@@ -120,34 +121,31 @@ export default function NuevaConvocatoria() {
       return;
     }
 
-    // Crear nueva convocatoria
-    const newConvocatoria = {
-      id: `conv-${Date.now()}`,
-      title: titulo.trim(),
-      description: `Cargo: ${cargo}, Departamento: ${dependencia}, Dedicación: ${dedicacion || "No especificada"}`,
-      status: "abierta" as const,
-      startDate: fechaInicio,
-      endDate: fechaFin,
-      requiredDocuments: documents.map(doc => ({
-        id: doc.id,
-        name: doc.name,
-        description: doc.description,
-        mandatory: doc.mandatory,
-        reviewPoints: doc.reviewPoints,
-      })),
-      applicantsCount: 0,
-      applicants: [],
-    };
-
-    // Agregar a la lista de convocatorias
-    convocatorias.push(newConvocatoria);
-
-    toast({
-      title: "Convocatoria creada exitosamente",
-      description: `"${titulo}" ha sido registrada y está lista para recibir postulantes.`,
-    });
-
-    navigate(`/convocatorias/${newConvocatoria.id}`);
+    crearConvocatoria.mutate(
+      {
+        titulo: titulo.trim(),
+        descripcion: `Cargo: ${cargo}, Área: ${dependencia}, Vinculación: ${tipoVinculacion}, Dedicación: ${dedicacion || "No especificada"}`,
+        estado: "abierta",
+        fecha_inicio: fechaInicio,
+        fecha_fin: fechaFin,
+      },
+      {
+        onSuccess: (nueva) => {
+          toast({
+            title: "Convocatoria creada exitosamente",
+            description: `"${titulo}" ha sido registrada y está lista para recibir postulantes.`,
+          });
+          navigate(`/convocatorias/${nueva.id}`);
+        },
+        onError: () => {
+          toast({
+            title: "Error al crear convocatoria",
+            description: "Hubo un problema al conectar con el servidor. Inténtelo de nuevo.",
+            variant: "destructive",
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -170,7 +168,7 @@ export default function NuevaConvocatoria() {
           <TabsTrigger value="documentacion">Documentación Requerida</TabsTrigger>
         </TabsList>
 
-      {/* === TAB 1: DETALLES === */}
+        {/* === TAB 1: DETALLES === */}
         <TabsContent value="detalles">
           <Card>
             <CardHeader>
@@ -365,8 +363,8 @@ export default function NuevaConvocatoria() {
 
               <div className="flex justify-between pt-6">
                 <Button variant="outline" onClick={() => setActiveTab("detalles")}>← Anterior</Button>
-                <Button onClick={handleSubmit} disabled={documents.length === 0}>
-                  Crear Convocatoria
+                <Button onClick={handleSubmit} disabled={documents.length === 0 || crearConvocatoria.isPending}>
+                  {crearConvocatoria.isPending ? "Creando..." : "Crear Convocatoria"}
                 </Button>
               </div>
             </CardContent>

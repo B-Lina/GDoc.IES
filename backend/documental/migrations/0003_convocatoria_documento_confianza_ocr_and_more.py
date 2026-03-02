@@ -14,6 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            # Nuevo modelo Convocatoria con campos básicos para gestionar convocatorias de carga de documentos.
             name='Convocatoria',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -81,6 +82,8 @@ class Migration(migrations.Migration):
             name='texto_extraido',
             field=models.TextField(blank=True, null=True),
         ),
+
+        #Modelo de perfil de usuario para asignar roles (admin, revisor, postulante) y gestionar permisos de acceso a funcionalidades.
         migrations.CreateModel(
             name='UsuarioPerfil',
             fields=[
@@ -95,6 +98,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Perfiles de Usuarios',
             },
         ),
+        #Modelo de Postulante para almacenar información personal y de contacto de los usuarios que postulan a las convocatorias.
         migrations.CreateModel(
             name='Postulante',
             fields=[
@@ -116,6 +120,7 @@ class Migration(migrations.Migration):
                 'ordering': ['-fecha_registro'],
             },
         ),
+        #Modelo de DocumentoRequerido para definir los documentos que se requieren en cada convocatoria, con campos para nombre, descripción y obligatoriedad.
         migrations.CreateModel(
             name='DocumentoRequerido',
             fields=[
@@ -146,6 +151,7 @@ class Migration(migrations.Migration):
             name='postulante',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='documentos', to='documental.postulante'),
         ),
+        #Modelo de Expediente para agrupar los documentos cargados por cada postulante en cada convocatoria, con estado del expediente (completo, incompleto, en proceso) y fechas de creación y actualización.
         migrations.CreateModel(
             name='Expediente',
             fields=[

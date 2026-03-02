@@ -13,7 +13,6 @@ import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
-import { convocatorias } from "@/lib/mock-data";
 
 interface ReviewPoint {
   id: string;
@@ -33,16 +32,16 @@ const PREDEFINED_REVIEW_POINTS: ReviewPoint[] = [
   { id: "rp1", label: "Firma presente y legible", predefined: true },
   { id: "rp2", label: "Fecha vigente (< 3 meses)", predefined: true },
   { id: "rp3", label: "Sello institucional visible", predefined: true },
-  { id: "rp4", label: "Nombre y cedula coincide", predefined: true },
-  { id: "rp5", label: "Resolucion legible()", predefined: true },
+  { id: "rp4", label: "Nombre coincide con cédula", predefined: true },
+  { id: "rp5", label: "Documento completo (todas las páginas)", predefined: true },
+  { id: "rp6", label: "Resolución legible (> 200 DPI)", predefined: true },
 ];
 
 export default function NuevaConvocatoria() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("detalles"); //antes era "personal pero cambio a detalles"
+  const [activeTab, setActiveTab] = useState("detalles");
 
-  // Datos de convocatoria
-  const [titulo, setTitulo] = useState("");
+  // Datos de contratación
   const [cargo, setCargo] = useState("");
   const [dependencia, setDependencia] = useState("");
   const [tipoVinculacion, setTipoVinculacion] = useState("");
@@ -111,43 +110,8 @@ export default function NuevaConvocatoria() {
   };
 
   const handleSubmit = () => {
-    if (!titulo.trim() || !cargo.trim() || !dependencia.trim() || !fechaInicio || !fechaFin || documents.length === 0) {
-      toast({
-        title: "Formulario incompleto",
-        description: "Por favor complete todos los campos y agregue al menos un documento requerido.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Crear nueva convocatoria
-    const newConvocatoria = {
-      id: `conv-${Date.now()}`,
-      title: titulo.trim(),
-      description: `Cargo: ${cargo}, Departamento: ${dependencia}, Dedicación: ${dedicacion || "No especificada"}`,
-      status: "abierta" as const,
-      startDate: fechaInicio,
-      endDate: fechaFin,
-      requiredDocuments: documents.map(doc => ({
-        id: doc.id,
-        name: doc.name,
-        description: doc.description,
-        mandatory: doc.mandatory,
-        reviewPoints: doc.reviewPoints,
-      })),
-      applicantsCount: 0,
-      applicants: [],
-    };
-
-    // Agregar a la lista de convocatorias
-    convocatorias.push(newConvocatoria);
-
-    toast({
-      title: "Convocatoria creada exitosamente",
-      description: `"${titulo}" ha sido registrada y está lista para recibir postulantes.`,
-    });
-
-    navigate(`/convocatorias/${newConvocatoria.id}`);
+    toast({ title: "Convocatoria creada", description: "La convocatoria ha sido registrada exitosamente." });
+    navigate("/convocatorias");
   };
 
   return (
@@ -159,7 +123,7 @@ export default function NuevaConvocatoria() {
         </Button>
         <div>
           <h1 className="text-2xl font-bold text-foreground">Nueva Convocatoria</h1>
-          <p className="text-sm text-muted-foreground">Complete la información de la convocatoria y documentación requerida</p>
+          <p className="text-sm text-muted-foreground">Complete la información del postulante y la documentación requerida</p>
         </div>
       </div>
 
@@ -167,52 +131,49 @@ export default function NuevaConvocatoria() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="detalles">Detalles de la Convocatoria</TabsTrigger>
-          <TabsTrigger value="documentacion">Documentación Requerida</TabsTrigger>
+          <TabsTrigger value="documentacion">Documentación</TabsTrigger>
         </TabsList>
 
-      {/* === TAB 1: DETALLES === */}
-        <TabsContent value="detalles">
+        {/* === DATOS DE CONTRATACIÓN === */}
+        <TabsContent value="contratacion">
           <Card>
             <CardHeader>
-              <CardTitle>Configuración de la Convocatoria</CardTitle>
-              <CardDescription>Defina el cargo, fechas y tipo de vinculación para esta convocatoria</CardDescription>
+              <CardTitle className="text-lg">Información de Contratación</CardTitle>
+              <CardDescription>Detalles del tipo de vinculación</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label>Título de la Convocatoria</Label>
-                <Input placeholder="Ej: Convocatoria Docente 2024-II" value={titulo} onChange={(e) => setTitulo(e.target.value)} />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label>Cargo</Label>
                   <Input placeholder="Ej: Docente Cátedra" value={cargo} onChange={(e) => setCargo(e.target.value)} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Área o Departamento</Label>
+                  <Label>Dependencia</Label>
                   <Input placeholder="Ej: Facultad de Ingeniería" value={dependencia} onChange={(e) => setDependencia(e.target.value)} />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label>Tipo de Vinculación</Label>
-                  <Input placeholder="Ej: Cátedra, Tiempo Completo, Por Honorarios" value={tipoVinculacion} onChange={(e) => setTipoVinculacion(e.target.value)} />
+                  <Input placeholder="Ej: Cátedra, Tiempo Completo, Medio Tiempo" value={tipoVinculacion} onChange={(e) => setTipoVinculacion(e.target.value)} />
                 </div>
                 <div className="space-y-2">
                   <Label>Dedicación</Label>
                   <Input placeholder="Ej: 20 horas semanales" value={dedicacion} onChange={(e) => setDedicacion(e.target.value)} />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label>Fecha de Inicio Postulaciones</Label>
+                  <Label>Fecha de Inicio</Label>
                   <Input type="date" value={fechaInicio} onChange={(e) => setFechaInicio(e.target.value)} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Fecha de Cierre</Label>
+                  <Label>Fecha de Fin</Label>
                   <Input type="date" value={fechaFin} onChange={(e) => setFechaFin(e.target.value)} />
                 </div>
               </div>
               <div className="flex justify-between pt-4">
+                <Button variant="outline" onClick={() => setActiveTab("personal")}>← Anterior</Button>
                 <Button onClick={() => setActiveTab("documentacion")}>Siguiente →</Button>
               </div>
             </CardContent>
@@ -364,7 +325,7 @@ export default function NuevaConvocatoria() {
               )}
 
               <div className="flex justify-between pt-6">
-                <Button variant="outline" onClick={() => setActiveTab("detalles")}>← Anterior</Button>
+                <Button variant="outline" onClick={() => setActiveTab("contratacion")}>← Anterior</Button>
                 <Button onClick={handleSubmit} disabled={documents.length === 0}>
                   Crear Convocatoria
                 </Button>

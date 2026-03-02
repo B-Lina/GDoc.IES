@@ -1,9 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import { Plus, Calendar, Users, FileText, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { convocatorias, type Convocatoria } from "@/lib/mock-data";
-import { cn } from "@/lib/utils";
 
 export default function Convocatorias() {
   const navigate = useNavigate();
@@ -15,7 +14,9 @@ export default function Convocatorias() {
           <h1 className="text-2xl font-bold text-foreground">Convocatorias</h1>
           <p className="text-sm text-muted-foreground">Gestión de convocatorias de vinculación</p>
         </div>
-        <Button onClick={() => navigate("/nueva-convocatoria")}><Plus className="mr-2 h-4 w-4" />Nueva Convocatoria</Button>
+        <Button onClick={() => navigate("/convocatorias/nueva")}>
+          <Plus className="mr-2 h-4 w-4" />Nueva Convocatoria
+        </Button>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -28,13 +29,8 @@ export default function Convocatorias() {
 }
 
 function ConvocatoriaCard({ convocatoria }: { convocatoria: Convocatoria }) {
-  const navigate = useNavigate();
-  
   return (
-    <div 
-      onClick={() => navigate(`/convocatorias/${convocatoria.id}`)}
-      className="group rounded-xl border border-border bg-card p-6 shadow-sm transition-all hover:shadow-md cursor-pointer hover:border-primary/50"
-    >
+    <div className="group rounded-xl border border-border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
       <div className="mb-3 flex items-center justify-between">
         <Badge variant={convocatoria.status === "abierta" ? "default" : "secondary"}>
           {convocatoria.status === "abierta" ? "Abierta" : "Cerrada"}

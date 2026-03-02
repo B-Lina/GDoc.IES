@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
 import { Plus, Calendar, Users, FileText, ChevronRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,13 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useConvocatorias } from "@/hooks/useConvocatorias";
 import type { Convocatoria } from "@/types/api";
+=======
+import { Plus, Calendar, Users, FileText, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { convocatorias, type Convocatoria } from "@/lib/mock-data";
+>>>>>>> 2deaf4e02a7418ea0394cf5f9efac0779dc7ae89
 
 export default function Convocatorias() {
   const navigate = useNavigate();
@@ -18,7 +26,11 @@ export default function Convocatorias() {
           <h1 className="text-2xl font-bold text-foreground">Convocatorias</h1>
           <p className="text-sm text-muted-foreground">Gestión de convocatorias de vinculación</p>
         </div>
+<<<<<<< HEAD
         <Button onClick={() => navigate("/nueva-convocatoria")}>
+=======
+        <Button onClick={() => navigate("/convocatorias/nueva")}>
+>>>>>>> 2deaf4e02a7418ea0394cf5f9efac0779dc7ae89
           <Plus className="mr-2 h-4 w-4" />Nueva Convocatoria
         </Button>
       </div>
@@ -49,6 +61,7 @@ export default function Convocatorias() {
 }
 
 function ConvocatoriaCard({ convocatoria }: { convocatoria: Convocatoria }) {
+<<<<<<< HEAD
   const navigate = useNavigate();
 
   return (
@@ -56,6 +69,10 @@ function ConvocatoriaCard({ convocatoria }: { convocatoria: Convocatoria }) {
       onClick={() => navigate(`/convocatorias/${convocatoria.id}`)}
       className="group rounded-xl border border-border bg-card p-6 shadow-sm transition-all hover:shadow-md cursor-pointer hover:border-primary/50"
     >
+=======
+  return (
+    <div className="group rounded-xl border border-border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
+>>>>>>> 2deaf4e02a7418ea0394cf5f9efac0779dc7ae89
       <div className="mb-3 flex items-center justify-between">
         <Badge variant={convocatoria.estado === "abierta" ? "default" : "secondary"}>
           {convocatoria.estado === "abierta" ? "Abierta" : "Cerrada"}

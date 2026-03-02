@@ -11,31 +11,11 @@ export interface User {
   avatar?: string;
 }
 
-export interface ReviewPoint {
-  id: string;
-  label: string;
-  predefined: boolean;
-}
-
 export interface RequiredDocument {
   id: string;
   name: string;
   description: string;
   mandatory: boolean;
-  reviewPoints?: ReviewPoint[];
-}
-
-export interface Postulante {
-  id: string;
-  nombres: string;
-  apellidos: string;
-  tipoDocumento: string;
-  numeroDocumento: string;
-  email: string;
-  telefono: string;
-  direccion: string;
-  fechaRegistro: string;
-  status: "activo" | "inactivo";
 }
 
 export interface Convocatoria {
@@ -47,7 +27,6 @@ export interface Convocatoria {
   endDate: string;
   requiredDocuments: RequiredDocument[];
   applicantsCount: number;
-  applicants?: Postulante[];
 }
 
 export interface UploadedDocument {
@@ -98,32 +77,6 @@ export const convocatorias: Convocatoria[] = [
       { id: "r5", name: "Certificado de Antecedentes", description: "Vigente (< 3 meses)", mandatory: true },
       { id: "r6", name: "Certificaciones Laborales", description: "Últimos 5 años", mandatory: false },
     ],
-    applicants: [
-      {
-        id: "p1",
-        nombres: "María",
-        apellidos: "García López",
-        tipoDocumento: "Cédula de Ciudadanía",
-        numeroDocumento: "1234567890",
-        email: "maria.garcia@email.com",
-        telefono: "3015551234",
-        direccion: "Calle 10 #20-30, Apto 302",
-        fechaRegistro: "2025-02-10",
-        status: "activo",
-      },
-      {
-        id: "p2",
-        nombres: "Juan",
-        apellidos: "López Rodríguez",
-        tipoDocumento: "Cédula de Ciudadanía",
-        numeroDocumento: "9876543210",
-        email: "juan.lopez@email.com",
-        telefono: "3105552345",
-        direccion: "Carrera 15 #45-60",
-        fechaRegistro: "2025-02-12",
-        status: "activo",
-      },
-    ],
   },
   {
     id: "2",
@@ -138,7 +91,6 @@ export const convocatorias: Convocatoria[] = [
       { id: "r2", name: "Cédula de Ciudadanía", description: "Copia ampliada al 150%", mandatory: true },
       { id: "r3", name: "Diploma de Doctorado", description: "Copia autenticada", mandatory: true },
     ],
-    applicants: [],
   },
   {
     id: "3",
@@ -149,7 +101,6 @@ export const convocatorias: Convocatoria[] = [
     endDate: "2024-09-30",
     applicantsCount: 45,
     requiredDocuments: [],
-    applicants: [],
   },
 ];
 

@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "@/hooks/use-toast";
-<<<<<<< HEAD
 import { Upload, CheckCircle2, AlertTriangle, Clock, FileText, Briefcase } from "lucide-react";
 
 // ── Tipos alineados con el backend Django ──
@@ -14,23 +13,11 @@ interface ConvocatoriaDetalle {
     id: number;
     titulo: string;
     cargo: string;
-=======
-import { Upload, CheckCircle2, AlertTriangle, Clock, FileText, User, Briefcase } from "lucide-react";
-
-// ── Mock Django REST Framework Response ──
-
-interface ConvocatoriaDetalle {
-  id: number;
-  titulo: string;
-  cargo: string;
-  empresa_id: number;
->>>>>>> 2deaf4e02a7418ea0394cf5f9efac0779dc7ae89
 }
 
 type EstadoDocumento = "PENDIENTE" | "CARGADO" | "APROBADO" | "RECHAZADO";
 
 interface DocumentoRequisito {
-<<<<<<< HEAD
     id: number;
     requisito_nombre: string;
     descripcion: string;
@@ -186,7 +173,9 @@ export default function PortalPostulante() {
             </div>
         </div>
     );
-=======
+
+
+/*
   id: number;
   requisito_nombre: string;
   descripcion: string;
@@ -195,6 +184,7 @@ export default function PortalPostulante() {
   archivo_url: string | null;
   observaciones: string;
 }
+
 
 const convocatoriaDetalles: ConvocatoriaDetalle = {
   id: 1,
@@ -300,6 +290,7 @@ export default function PortalPostulante() {
   return (
     <div className="space-y-8">
       {/* Welcome Header */}
+      /*
       <div className="space-y-1">
         <h1 className="text-2xl font-bold tracking-tight text-foreground">
           Bienvenido, Postulante
@@ -309,7 +300,7 @@ export default function PortalPostulante() {
         </p>
       </div>
 
-      {/* Convocatoria Info */}
+      {/* Convocatoria Info 
       <Card className="border-primary/20 bg-primary/5">
         <CardContent className="flex items-start gap-4 p-5">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
@@ -322,7 +313,7 @@ export default function PortalPostulante() {
         </CardContent>
       </Card>
 
-      {/* Progress Section */}
+      {/* Progress Section }
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Progreso de Documentación</CardTitle>
@@ -351,7 +342,7 @@ export default function PortalPostulante() {
         </CardContent>
       </Card>
 
-      {/* Document Checklist */}
+      {/* Document Checklist }
       <div className="space-y-2">
         <h2 className="text-lg font-semibold text-foreground">Documentos Requeridos</h2>
         <p className="text-sm text-muted-foreground">
@@ -385,7 +376,7 @@ export default function PortalPostulante() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
-                {/* Rejected alert */}
+                {/* Rejected alert }
                 {isRejected && doc.observaciones && (
                   <Alert variant="destructive">
                     <AlertTriangle className="h-4 w-4" />
@@ -394,7 +385,7 @@ export default function PortalPostulante() {
                   </Alert>
                 )}
 
-                {/* Upload button */}
+                {/* Upload button }
                 <div className="flex items-center gap-3">
                   <Button
                     variant={isRejected ? "destructive" : "outline"}
@@ -417,5 +408,7 @@ export default function PortalPostulante() {
       </div>
     </div>
   );
->>>>>>> 2deaf4e02a7418ea0394cf5f9efac0779dc7ae89
-}
+""">>>>>>> 2deaf4e02a7418ea0394cf5f9efac0779dc7ae89"""
+*/
+
+

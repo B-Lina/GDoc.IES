@@ -13,10 +13,8 @@ import { Separator } from "@/components/ui/separator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
-<<<<<<< HEAD
+
 import { useCrearConvocatoria } from "@/hooks/useConvocatorias";
-=======
->>>>>>> 2deaf4e02a7418ea0394cf5f9efac0779dc7ae89
 
 interface ReviewPoint {
   id: string;
@@ -43,13 +41,11 @@ const PREDEFINED_REVIEW_POINTS: ReviewPoint[] = [
 
 export default function NuevaConvocatoria() {
   const navigate = useNavigate();
-<<<<<<< HEAD
   const crearConvocatoria = useCrearConvocatoria();
-=======
->>>>>>> 2deaf4e02a7418ea0394cf5f9efac0779dc7ae89
   const [activeTab, setActiveTab] = useState("detalles");
 
   // Datos de contratación
+  const [titulo, setTitulo] = useState("");
   const [cargo, setCargo] = useState("");
   const [dependencia, setDependencia] = useState("");
   const [tipoVinculacion, setTipoVinculacion] = useState("");
@@ -118,7 +114,6 @@ export default function NuevaConvocatoria() {
   };
 
   const handleSubmit = () => {
-<<<<<<< HEAD
     if (!titulo.trim() || !cargo.trim() || !dependencia.trim() || !fechaInicio || !fechaFin || documents.length === 0) {
       toast({
         title: "Formulario incompleto",
@@ -153,10 +148,6 @@ export default function NuevaConvocatoria() {
         },
       }
     );
-=======
-    toast({ title: "Convocatoria creada", description: "La convocatoria ha sido registrada exitosamente." });
-    navigate("/convocatorias");
->>>>>>> 2deaf4e02a7418ea0394cf5f9efac0779dc7ae89
   };
 
   return (
@@ -179,13 +170,8 @@ export default function NuevaConvocatoria() {
           <TabsTrigger value="documentacion">Documentación</TabsTrigger>
         </TabsList>
 
-<<<<<<< HEAD
         {/* === TAB 1: DETALLES === */}
         <TabsContent value="detalles">
-=======
-        {/* === DATOS DE CONTRATACIÓN === */}
-        <TabsContent value="contratacion">
->>>>>>> 2deaf4e02a7418ea0394cf5f9efac0779dc7ae89
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">Información de Contratación</CardTitle>
@@ -193,6 +179,14 @@ export default function NuevaConvocatoria() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="space-y-2 md:col-span-2">
+                  <Label>TÃ­tulo de la Convocatoria</Label>
+                  <Input
+                    placeholder="Ej: Convocatoria Docentes CÃ¡tedra 2026-I"
+                    value={titulo}
+                    onChange={(e) => setTitulo(e.target.value)}
+                  />
+                </div>
                 <div className="space-y-2">
                   <Label>Cargo</Label>
                   <Input placeholder="Ej: Docente Cátedra" value={cargo} onChange={(e) => setCargo(e.target.value)} />
@@ -223,7 +217,7 @@ export default function NuevaConvocatoria() {
                 </div>
               </div>
               <div className="flex justify-between pt-4">
-                <Button variant="outline" onClick={() => setActiveTab("personal")}>← Anterior</Button>
+                <Button variant="outline" onClick={() => navigate("/convocatorias")}>← Anterior</Button>
                 <Button onClick={() => setActiveTab("documentacion")}>Siguiente →</Button>
               </div>
             </CardContent>
@@ -375,15 +369,9 @@ export default function NuevaConvocatoria() {
               )}
 
               <div className="flex justify-between pt-6">
-<<<<<<< HEAD
                 <Button variant="outline" onClick={() => setActiveTab("detalles")}>← Anterior</Button>
                 <Button onClick={handleSubmit} disabled={documents.length === 0 || crearConvocatoria.isPending}>
                   {crearConvocatoria.isPending ? "Creando..." : "Crear Convocatoria"}
-=======
-                <Button variant="outline" onClick={() => setActiveTab("contratacion")}>← Anterior</Button>
-                <Button onClick={handleSubmit} disabled={documents.length === 0}>
-                  Crear Convocatoria
->>>>>>> 2deaf4e02a7418ea0394cf5f9efac0779dc7ae89
                 </Button>
               </div>
             </CardContent>

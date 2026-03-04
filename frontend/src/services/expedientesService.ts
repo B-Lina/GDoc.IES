@@ -33,4 +33,11 @@ export const expedientesService = {
      */
     getById: (id: number): Promise<Expediente> =>
         apiClient.get<Expediente>(`/expedientes/${id}/`),
+
+    /**
+     * Crea un nuevo expediente (normalmente usado tras registrar un postulante).
+     * POST /api/expedientes/
+     */
+    create: (data: { postulante: number; convocatoria: number }): Promise<Expediente> =>
+        apiClient.post<Expediente>(`/expedientes/`, data),
 };

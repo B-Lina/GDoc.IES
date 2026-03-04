@@ -61,10 +61,39 @@ export interface PostulanteCreate {
     direccion: string;
 }
 
+// Actualización parcial de postulante. El backend permite cambiar también el estado.
+export interface PostulanteUpdate {
+    nombres?: string;
+    apellidos?: string;
+    tipo_documento?: string;
+    numero_documento?: string;
+    email?: string;
+    telefono?: string;
+    direccion?: string;
+    estado?: EstadoPostulante;
+}
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Convocatoria
 // ──────────────────────────────────────────────────────────────────────────────
 export type EstadoConvocatoria = "abierta" | "cerrada";
+
+export interface Convocatoria {
+    id: number;
+    titulo: string;
+    descripcion: string;
+    estado: EstadoConvocatoria;
+    archivado: boolean;
+    fecha_inicio: string;   // YYYY-MM-DD
+    fecha_fin: string;      // YYYY-MM-DD
+    documentos_requeridos: DocumentoRequerido[];
+    // listado de postulantes asociados, puede venir vacío
+    postulantes?: Postulante[];
+    postulantes_count: number;
+    is_abierta: boolean;
+    creado_en: string;
+    actualizado_en: string;
+}
 
 export interface DocumentoRequerido {
     id: number;
@@ -72,6 +101,8 @@ export interface DocumentoRequerido {
     descripcion: string;
     obligatorio: boolean;
     convocatoria: number;
+    subido_por?: { id: number; nombres: string; apellidos: string }[];
+    documentos_count?: number;
 }
 
 export interface DocumentoRequeridoCreate {
@@ -81,24 +112,12 @@ export interface DocumentoRequeridoCreate {
     convocatoria: number;
 }
 
-export interface Convocatoria {
-    id: number;
-    titulo: string;
-    descripcion: string;
-    estado: EstadoConvocatoria;
-    fecha_inicio: string;   // YYYY-MM-DD
-    fecha_fin: string;      // YYYY-MM-DD
-    documentos_requeridos: DocumentoRequerido[];
-    postulantes_count: number;
-    is_abierta: boolean;
-    creado_en: string;
-    actualizado_en: string;
-}
 
 export interface ConvocatoriaCreate {
     titulo: string;
     descripcion: string;
     estado?: EstadoConvocatoria;
+    archivado?: boolean;
     fecha_inicio: string;
     fecha_fin: string;
 }

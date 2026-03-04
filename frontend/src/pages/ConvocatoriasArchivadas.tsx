@@ -1,28 +1,23 @@
-
 import { useNavigate } from "react-router-dom";
-import { Plus, Calendar, Users, FileText, ChevronRight, Loader2 } from "lucide-react";
+import { Calendar, Users, FileText, ChevronRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useConvocatorias } from "@/hooks/useConvocatorias";
 import type { Convocatoria } from "@/types/api";
 
-
-export default function Convocatorias() {
+export default function ConvocatoriasArchivadas() {
   const navigate = useNavigate();
-  const { data, isLoading, isError } = useConvocatorias({ archivado: false });
-  const convocatorias = data?.results ?? [];
+  const { data, isLoading, isError } = useConvocatorias({ archivado: true });
+  const convocatorias = (data?.results ?? []).filter(c => c.archivado);
 
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Convocatorias</h1>
-          <p className="text-sm text-muted-foreground">Gestión de convocatorias de vinculación</p>
+          <h1 className="text-2xl font-bold text-foreground">Convocatorias Archivadas</h1>
+          <p className="text-sm text-muted-foreground">Se muestran las convocatorias que han sido archivadas</p>
         </div>
-        <Button onClick={() => navigate("/convocatorias/nueva")}>
-          <Plus className="mr-2 h-4 w-4" />Nueva Convocatoria
-        </Button>
       </div>
 
       {isLoading ? (
@@ -36,8 +31,7 @@ export default function Convocatorias() {
         </p>
       ) : convocatorias.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-border py-16 text-center">
-          <p className="text-sm font-medium text-muted-foreground">No hay convocatorias aún</p>
-          <p className="mt-1 text-xs text-muted-foreground">Crea la primera desde el botón "Nueva Convocatoria"</p>
+          <p className="text-sm font-medium text-muted-foreground">No hay convocatorias archivadas</p>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

@@ -60,6 +60,11 @@ export default function PortalPostulante() {
     const rechazados = documentos.filter((d) => d.estado_actual === "RECHAZADO").length;
 
     const handleUpload = (docId: number) => {
+        // bloqueamos si convocatoria no permite
+        if (convocatoriaDetalles.estado !== "abierta" || convocatoriaDetalles.archivado) {
+            toast({ title: "No se puede subir", description: "La convocatoria está cerrada o archivada.", variant: "destructive" });
+            return;
+        }
         setDocumentos((prev) =>
             prev.map((d) =>
                 d.id === docId
@@ -155,7 +160,7 @@ export default function PortalPostulante() {
                                     <Button
                                         variant={isRejected ? "destructive" : "outline"}
                                         size="sm"
-                                        disabled={isApproved}
+                                        disabled={isApproved || convocatoriaDetalles.estado !== "abierta" || convocatoriaDetalles.archivado}
                                         onClick={() => handleUpload(doc.id)}
                                         className="gap-2"
                                     >
@@ -191,6 +196,8 @@ const convocatoriaDetalles: ConvocatoriaDetalle = {
   titulo: "Docentes Cátedra 2025-I",
   cargo: "Docente de Cátedra - Ingeniería de Sistemas",
   empresa_id: 101,
+  estado: "abierta",
+  archivado: false,
 };
 
 const documentosIniciales: DocumentoRequisito[] = [

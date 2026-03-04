@@ -23,6 +23,7 @@ export interface Convocatoria {
   title: string;
   description: string;
   status: ConvocatoriaStatus;
+  archivado?: boolean;
   startDate: string;
   endDate: string;
   requiredDocuments: RequiredDocument[];
@@ -66,6 +67,7 @@ export const convocatorias: Convocatoria[] = [
     title: "Docentes Cátedra 2025-I",
     description: "Convocatoria para vinculación de docentes de cátedra primer semestre 2025",
     status: "abierta",
+    archivado: false,
     startDate: "2025-01-15",
     endDate: "2025-03-15",
     applicantsCount: 34,
@@ -83,6 +85,7 @@ export const convocatorias: Convocatoria[] = [
     title: "Docentes Tiempo Completo 2025",
     description: "Concurso docente para planta tiempo completo",
     status: "abierta",
+    archivado: false,
     startDate: "2025-02-01",
     endDate: "2025-04-30",
     applicantsCount: 12,
@@ -97,6 +100,7 @@ export const convocatorias: Convocatoria[] = [
     title: "Personal Administrativo 2024-II",
     description: "Vinculación administrativa segundo semestre",
     status: "cerrada",
+    archivado: false,
     startDate: "2024-07-01",
     endDate: "2024-09-30",
     applicantsCount: 45,

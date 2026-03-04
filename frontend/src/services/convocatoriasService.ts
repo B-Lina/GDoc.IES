@@ -14,8 +14,18 @@ export const convocatoriasService = {
      * Lista todas las convocatorias (paginado).
      * GET /api/convocatorias/
      */
-    getAll: (): Promise<PaginatedResponse<Convocatoria>> =>
-        apiClient.get<PaginatedResponse<Convocatoria>>("/convocatorias/"),
+    getAll: (filtros?: { estado?: string; archivado?: boolean }): Promise<PaginatedResponse<Convocatoria>> => {
+        const params = new URLSearchParams();
+        if (filtros?.estado) params.append('estado', filtros.estado);
+        if (filtros?.archivado !== undefined) {
+            // some backends expect 1/0 for boolean filters, so send numeric
+            params.append('archivado', filtros.archivado ? '1' : '0');
+        }
+        const query = params.toString();
+        return apiClient.get<PaginatedResponse<Convocatoria>>(
+            `/convocatorias/${query ? `?${query}` : ''}`
+        );
+    },
 
     /**
      * Obtiene una convocatoria por ID.
@@ -23,6 +33,13 @@ export const convocatoriasService = {
      */
     getById: (id: number): Promise<Convocatoria> =>
         apiClient.get<Convocatoria>(`/convocatorias/${id}/`),
+
+    /**
+     * Recupera todos los detalles (incluye requisitos y postulantes) mediante
+     * el endpoint especial /convocatorias/{id}/detalles/.
+     */
+    getDetails: (id: number): Promise<Convocatoria> =>
+        apiClient.get<Convocatoria>(`/convocatorias/${id}/detalles/`),
 
     /**
      * Crea una nueva convocatoria.
@@ -35,6 +52,7 @@ export const convocatoriasService = {
      * Actualiza parcialmente una convocatoria.
      * PATCH /api/convocatorias/{id}/
      */
+    // Partial ConvocatoriaCreate already includes archivado now
     update: (id: number, data: Partial<ConvocatoriaCreate>): Promise<Convocatoria> =>
         apiClient.patch<Convocatoria>(`/convocatorias/${id}/`, data),
 };

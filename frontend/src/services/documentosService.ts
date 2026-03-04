@@ -17,6 +17,7 @@ import type {
 export interface DocumentosFiltros {
     postulante?: number;
     convocatoria?: number;
+    documento_requerido?: number;
     estado?: string;
     estado_semaforo?: string;
 }
@@ -30,6 +31,7 @@ export const documentosService = {
         const params = new URLSearchParams();
         if (filtros?.postulante) params.append("postulante", String(filtros.postulante));
         if (filtros?.convocatoria) params.append("convocatoria", String(filtros.convocatoria));
+        if (filtros?.documento_requerido) params.append("documento_requerido", String(filtros.documento_requerido));
         if (filtros?.estado) params.append("estado", filtros.estado);
         if (filtros?.estado_semaforo) params.append("estado_semaforo", filtros.estado_semaforo);
         const query = params.toString();

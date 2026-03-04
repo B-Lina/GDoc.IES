@@ -1,4 +1,5 @@
 import { FileText, Users, ClipboardList, CheckCircle, AlertCircle, CircleDot, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { StatCard } from "@/components/StatCard";
 import { SemaphoreBadge } from "@/components/SemaphoreBadge";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -6,6 +7,7 @@ import { useDashboardStats } from "@/hooks/useDashboard";
 import { useDocumentos } from "@/hooks/useDocumentos";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { data: stats, isLoading: loadingStats, isError: errorStats } = useDashboardStats();
   const { data: docsData, isLoading: loadingDocs } = useDocumentos();
 
@@ -69,7 +71,10 @@ export default function Dashboard() {
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <h2 className="mb-4 text-lg font-semibold text-card-foreground">Semáforo Inteligente</h2>
         <div className="grid gap-4 sm:grid-cols-3">
-          <div className="flex items-center gap-4 rounded-lg border border-border p-4">
+          <div
+            className="flex items-center gap-4 rounded-lg border border-border p-4 cursor-pointer hover:bg-accent/10"
+            onClick={() => navigate('/documentos/semaforo/verde')}
+          >
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-semaphore-green/10">
               <CircleDot className="h-6 w-6 text-semaphore-green" />
             </div>
@@ -78,7 +83,10 @@ export default function Dashboard() {
               <p className="text-sm text-muted-foreground">Vigentes</p>
             </div>
           </div>
-          <div className="flex items-center gap-4 rounded-lg border border-border p-4">
+          <div
+            className="flex items-center gap-4 rounded-lg border border-border p-4 cursor-pointer hover:bg-accent/10"
+            onClick={() => navigate('/documentos/semaforo/amarillo')}
+          >
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-semaphore-yellow/10">
               <CircleDot className="h-6 w-6 text-semaphore-yellow" />
             </div>
@@ -87,7 +95,10 @@ export default function Dashboard() {
               <p className="text-sm text-muted-foreground">Con dudas</p>
             </div>
           </div>
-          <div className="flex items-center gap-4 rounded-lg border border-border p-4">
+          <div
+            className="flex items-center gap-4 rounded-lg border border-border p-4 cursor-pointer hover:bg-accent/10"
+            onClick={() => navigate('/documentos/semaforo/rojo')}
+          >
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-semaphore-red/10">
               <CircleDot className="h-6 w-6 text-semaphore-red" />
             </div>

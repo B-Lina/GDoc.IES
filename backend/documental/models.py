@@ -4,7 +4,7 @@ FASE 1-2: Modelos completos para gestión de documentos, convocatorias, usuarios
 """
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import FileExtensionValidator
+from django.core.validators import FileExtensionValidator, RegexValidator
 from django.utils import timezone
 
 
@@ -44,8 +44,15 @@ class Postulante(models.Model):
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
     tipo_documento = models.CharField(max_length=50, default='Cédula de Ciudadanía')
-    numero_documento = models.CharField(max_length=50, unique=True)
-    email = models.EmailField()
+    numero_documento = models.CharField(
+        max_length=50,
+        unique=True,
+        validators=[
+            # únicamente dígitos entre 6 y 12 caracteres
+            RegexValidator(r'^[0-9]{6,12}$', message='Formato de documento inválido')
+        ],
+    )
+    email = models.EmailField(unique=True)
     telefono = models.CharField(max_length=20)
     direccion = models.CharField(max_length=255)
     fecha_registro = models.DateTimeField(auto_now_add=True)
@@ -72,6 +79,7 @@ class Convocatoria(models.Model):
     titulo = models.CharField(max_length=200)
     descripcion = models.TextField()
     estado = models.CharField(max_length=20, choices=STATUS_CHOICES, default='abierta')
+    archivado = models.BooleanField(default=False)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
     creado_en = models.DateTimeField(auto_now_add=True)

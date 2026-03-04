@@ -7,9 +7,11 @@ import { AppLayout } from "@/components/layout/AppLayout";
 import { PostulanteLayout } from "@/components/layout/PostulanteLayout";
 import Dashboard from "./pages/Dashboard";
 import Convocatorias from "./pages/Convocatorias";
+import ConvocatoriasArchivadas from "./pages/ConvocatoriasArchivadas";
 import NuevaConvocatoria from "./pages/NuevaConvocatoria";
 import ConvocatoriaDetalle from "./pages/ConvocatoriaDetalle";
 import Documentos from "./pages/Documentos";
+import SemaforoDocs from "./pages/SemaforoDocs";
 import Expedientes from "./pages/Expedientes";
 import Usuarios from "./pages/Usuarios";
 import PortalPostulante from "./pages/PortalPostulante";
@@ -27,9 +29,11 @@ const App = () => (
           <Route element={<AppLayout />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/convocatorias" element={<Convocatorias />} />
+            <Route path="/convocatorias/archivadas" element={<ConvocatoriasArchivadas />} />
             <Route path="/convocatorias/nueva" element={<NuevaConvocatoria />} />
             <Route path="/convocatorias/:id" element={<ConvocatoriaDetalle />} />
             <Route path="/documentos" element={<Documentos />} />
+            <Route path="/documentos/semaforo/:status" element={<SemaforoDocs />} />
             <Route path="/expedientes" element={<Expedientes />} />
             <Route path="/usuarios" element={<Usuarios />} />
           </Route>

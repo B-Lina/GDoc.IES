@@ -31,6 +31,7 @@ export const postulantesService = {
      * Actualiza parcialmente un postulante.
      * PATCH /api/postulantes/{id}/
      */
-    update: (id: number, data: Partial<PostulanteCreate>): Promise<Postulante> =>
+    // data puede incluir cualquier campo del recurso de postulante, incluyendo estado
+    update: (id: number, data: Partial<Postulante>): Promise<Postulante> =>
         apiClient.patch<Postulante>(`/postulantes/${id}/`, data),
 };

@@ -31,3 +31,17 @@ export function useCrearPostulante() {
         },
     });
 }
+
+export function useActualizarPostulante() {
+    const queryClient = useQueryClient();
+
+    return useMutation<Postulante, Error, {id: number; data: Partial<Postulante>}>({
+        mutationFn: ({id,data}) => postulantesService.update(id,data),
+        onSuccess: (_, datos) => {
+            queryClient.invalidateQueries({ queryKey: POSTULANTES_KEY });
+            queryClient.invalidateQueries({ queryKey: ["convocatorias"] });
+            queryClient.invalidateQueries({ queryKey: ["convocatorias", datos.id] });
+            queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+        },
+    });
+}

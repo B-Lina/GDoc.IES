@@ -3,6 +3,8 @@ Serializadores DRF para el módulo documental.
 FASE 1-2: Serializadores completos para todos los modelos.
 """
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
+from django.core.validators import RegexValidator
 from django.contrib.auth.models import User
 from .models import (
     Documento, Postulante, Convocatoria, DocumentoRequerido,
@@ -34,20 +36,53 @@ class UsuarioPerfilSerializer(serializers.ModelSerializer):
 class DocumentoRequeridoSerializer(serializers.ModelSerializer):
     """
     Serializador para el modelo DocumentoRequerido.
+    Agrega:
+      * la lista de postulantes que han subido un documento correspondiente
+        a este requisito (`subido_por`).
+      * la cantidad de documentos ya subidos bajo este requisito.
     """
+    subido_por = serializers.SerializerMethodField(read_only=True)
+    documentos_count = serializers.SerializerMethodField(read_only=True)
     
     class Meta:
         model = DocumentoRequerido
-        fields = ['id', 'nombre', 'descripcion', 'obligatorio', 'convocatoria']
-        read_only_fields = ['id']
+        fields = [
+            'id', 'nombre', 'descripcion', 'obligatorio',
+            'convocatoria', 'subido_por', 'documentos_count'
+        ]
+        read_only_fields = ['id', 'subido_por', 'documentos_count']
+    
+    def get_subido_por(self, obj):
+        # buscamos postulantes únicos que tienen un Documento vinculado a este requisito
+        postulantes = obj.documentos_cargados.select_related('postulante').values(
+            'postulante', 'postulante__nombres', 'postulante__apellidos'
+        ).distinct()
+        return [
+            {
+                'id': p['postulante'],
+                'nombres': p['postulante__nombres'],
+                'apellidos': p['postulante__apellidos'],
+            }
+            for p in postulantes if p['postulante'] is not None
+        ]
+
+    def get_documentos_count(self, obj):
+        return obj.documentos_cargados.count()
 
 
 class PostulanteSerializer(serializers.ModelSerializer):
     """
     Serializador para el modelo Postulante.
     Incluye información de usuario si está asociado.
+    Valida unicidad de correo y formato de documento.
     """
     usuario = UsuarioSerializer(read_only=True)
+    email = serializers.EmailField(validators=[
+        UniqueValidator(queryset=Postulante.objects.all(), message="El email ya está en uso")
+    ])
+    numero_documento = serializers.CharField(validators=[
+        RegexValidator(r'^[0-9]{6,12}$', message="Formato de documento inválido (solo dígitos, 6–12 caracteres)")
+    ])
     
     class Meta:
         model = Postulante
@@ -62,20 +97,28 @@ class PostulanteSerializer(serializers.ModelSerializer):
 class ConvocatoriaSerializer(serializers.ModelSerializer):
     """
     Serializador para el modelo Convocatoria con documentos requeridos anidados.
+    Además agrega la lista de postulantes cuando se utiliza para detalle.
     """
     documentos_requeridos = DocumentoRequeridoSerializer(many=True, read_only=True)
+    postulantes = serializers.SerializerMethodField()
     postulantes_count = serializers.SerializerMethodField()
     is_abierta = serializers.SerializerMethodField()
     
     class Meta:
         model = Convocatoria
         fields = [
-            'id', 'titulo', 'descripcion', 'estado', 'fecha_inicio',
-            'fecha_fin', 'documentos_requeridos', 'postulantes_count',
-            'is_abierta', 'creado_en', 'actualizado_en'
+            'id', 'titulo', 'descripcion', 'estado', 'archivado', 'archivado', 'fecha_inicio',
+            'fecha_fin', 'documentos_requeridos', 'postulantes',
+            'postulantes_count', 'is_abierta', 'creado_en', 'actualizado_en'
         ]
         read_only_fields = ['id', 'creado_en', 'actualizado_en']
     
+    def get_postulantes(self, obj):
+        """Devuelve la lista de postulantes que tienen un expediente en la convocatoria."""
+        # usamos distinct para evitar duplicados en caso de algún dato extraño
+        postulantes_qs = Postulante.objects.filter(expedientes__convocatoria=obj).distinct()
+        return PostulanteSerializer(postulantes_qs, many=True).data
+
     def get_postulantes_count(self, obj):
         """Retorna la cantidad de postulantes en esta convocatoria."""
         return obj.postulantes_count

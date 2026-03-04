@@ -4,7 +4,7 @@ FASE 1-2: ViewSets CRUD para todos los modelos + Dashboard stats especial.
 FASE 3: OCR al subir documento.
 FASE 4: Semáforo inteligente.
 """
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -163,14 +163,35 @@ class ConvocatoriaViewSet(viewsets.ModelViewSet):
     - update: PUT /api/convocatorias/{id}/
     - partial_update: PATCH /api/convocatorias/{id}/
     - destroy: DELETE /api/convocatorias/{id}/
+    Además provee la ruta adicional:
+    - detalles: GET /api/convocatorias/{id}/detalles/
+      (retorna la convocatoria con requisitos y postulantes anidados)
     """
     queryset = Convocatoria.objects.all()
     serializer_class = ConvocatoriaSerializer
     permission_classes = [AllowAny]
-    filterset_fields = ['estado']
+    filterset_fields = ['estado', 'archivado']
     search_fields = ['titulo', 'descripcion']
     ordering_fields = ['fecha_inicio', 'fecha_fin']
     ordering = ['-fecha_inicio']
+
+    @action(detail=True, methods=['get'], url_path='detalles')
+    def detalles(self, request, pk=None):
+        convocatoria = self.get_object()
+        serializer = self.get_serializer(convocatoria)
+        return Response(serializer.data)
+
+    def partial_update(self, request, *args, **kwargs):
+        # intercept archiving to update postulantes estado
+        instance = self.get_object()
+        prev_arch = instance.archivado
+        resp = super().partial_update(request, *args, **kwargs)
+        # after update, check if archived flag turned from False to True
+        instance.refresh_from_db()
+        if not prev_arch and instance.archivado:
+            # inactivate all postulantes linked via expedientes
+            Postulante.objects.filter(expedientes__convocatoria=instance).update(estado='inactivo')
+        return resp
 
 
 class DocumentoRequeridoViewSet(viewsets.ModelViewSet):
@@ -229,6 +250,13 @@ class DocumentoViewSet(viewsets.ModelViewSet):
         4. Guarda texto_extraido y estado_semaforo
         ========================================================================
         """
+        # antes de guardar, validamos que la convocatoria permita cargas
+        convocatoria = serializer.validated_data.get('convocatoria')
+        if convocatoria and hasattr(convocatoria, 'estado'):
+            if convocatoria.estado == 'cerrada' or getattr(convocatoria, 'archivado', False):
+                from rest_framework.exceptions import ValidationError
+                raise ValidationError("No se pueden cargar documentos en una convocatoria cerrada o archivada.")
+        
         doc = serializer.save()
         
         # FASE 3: Extraer texto con OCR

@@ -15,6 +15,7 @@ import { currentUser } from "@/lib/mock-data";
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/" },
   { label: "Convocatorias", icon: ClipboardList, href: "/convocatorias" },
+  { label: "Archivadas", icon: FolderCheck, href: "/convocatorias/archivadas" },
   { label: "Documentos", icon: FileText, href: "/documentos" },
   { label: "Expedientes", icon: FolderCheck, href: "/expedientes" },
   { label: "Usuarios", icon: Users, href: "/usuarios" },

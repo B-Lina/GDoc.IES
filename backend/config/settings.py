@@ -121,12 +121,44 @@ REST_FRAMEWORK = {
 }
 
 # CORS: permitir frontend en desarrollo
-CORS_ALLOWED_ORIGINS = os.environ.get(
-    'CORS_ORIGINS',
-    'http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000,http://localhost:8080'
-).split(',')
-# Alternativa para desarrollo: permitir todo (solo desarrollo)
-if DEBUG and os.environ.get('CORS_ALLOW_ALL', 'true').lower() in ('true', '1'):
+# El frontend React corre típicamente en http://localhost:5173 (Vite) o http://localhost:3000 (CRA)
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:5173',
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+]
+
+# Para desarrollo: permitir credentials en CORS
+CORS_ALLOW_CREDENTIALS = True
+
+# Permite métodos HTTP comunes en CORS
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+# Permite headers comunes en CORS
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# DEPRECATED pero lo dejamos para backward compatibility
+if DEBUG and os.environ.get('CORS_ALLOW_ALL', 'false').lower() in ('true', '1'):
     CORS_ALLOW_ALL_ORIGINS = True
 
 # OCR (Fase 3): ruta a Tesseract. En Windows suele ser necesario.

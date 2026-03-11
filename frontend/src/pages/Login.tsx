@@ -1,6 +1,6 @@
 import { useState, FormEvent } from "react";
 import { Navigate } from "react-router-dom";
-import { GraduationCap, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -168,14 +168,8 @@ const Login = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/30 p-4">
       <div className="w-full max-w-md space-y-6">
-        <div className="flex flex-col items-center space-y-2">
-          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary">
-            <GraduationCap className="h-8 w-8 text-primary-foreground" />
-          </div>
-          <h1 className="text-2xl font-bold text-foreground">G-Doc IES</h1>
-          <p className="text-sm text-muted-foreground">
-            Universidad de Cundinamarca
-          </p>
+        <div className="flex flex-col items-center space-y-4 mb-4">
+          <img src="/logo.png" alt="UNI SIGEA Logo" className="h-24 w-auto object-contain" />
         </div>
 
         <Tabs defaultValue="login">
